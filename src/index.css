@@ -69,12 +69,10 @@ body {
   justify-content: center;
 }
 
-.bold {
-  font-weight: var(--font-weight-bold);
-}
-
-.link {
-  color: var(--color-gray-500);
+ul,
+li {
+  list-style-type: none;
+  padding-left: 0;
 }
 
 .container {

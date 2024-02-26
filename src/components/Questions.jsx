@@ -1,18 +1,34 @@
-export default function Questions({ questions }) {
-  console.log(questions);
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
 
-  const questionElement = questions.map((question) => {
+export default function Questions({ questions }) {
+  const createQuestion = (questionData) => {
+    const { question, correct_answer, incorrect_answers } = questionData;
+
+    const answers = [correct_answer, ...incorrect_answers];
+
+    return {
+      question,
+      answers,
+      correct_answer
+    };
+  };
+
+  const questionElement = questions.map((questionData, index) => {
+    const { question, answers } = createQuestion(questionData);
     return (
       <div className="question--container">
-        <h2 className="question">{question.question}</h2>
-        <div className="answer--container">
-          <button className="answer">Adios</button>
-          <button className="answer">Hola</button>
-          <button className="answer">Au revoir</button>
-          <button className="answer">Salir</button>
-        </div>
+        <h3>{question}</h3>
+        <ul className="answer--container">
+          {answers.map((answer, answerIndex) => (
+            <li key={answerIndex}>
+              <button className="answer">{answer}</button>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   });
+
   return <section className="container">{questionElement}</section>;
 }
