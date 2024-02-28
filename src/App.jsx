@@ -5,41 +5,34 @@ import Questions from './components/Questions';
 
 export default function App() {
   const [showQuestions, setShowQuestions] = useState(false);
-  const [questions, setQuestions] = useState([]);
+  const [questionsData, setQuestionsData] = useState([]);
 
   useEffect(() => {
-    //create a controller
-    let controller = new AbortController();
-    (async () => {
-      try {
-        const response = await fetch(
-          `https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple`,
-          {
-            // connect the controller with the fetch request
-            signal: controller.signal
-          }
-        );
-        // handle success
-        const data = await response.json();
-        setQuestions(data.results);
-        // remove the controller
-        controller = null;
-      } catch (error) {
-        // Handle the error
-        console.log(error);
-      }
-    })();
-    //aborts the request when the component umounts
-    return () => controller?.abort();
-  }, []);
+    async function fetchQuestions() {
+      const res = await fetch(
+        `https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple`
+      );
+      const data = await res.json();
+      setQuestionsData(data.results);
+    }
 
+    const timer = setTimeout(() => {
+      fetchQuestions();
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <main>
-      {showQuestions ? (
-        <Questions questions={questions} />
-      ) : (
-        <Start handleStart={() => setShowQuestions(true)} />
-      )}
+      <section className="container">
+        {showQuestions ? (
+          questionsData.map((question, index) => (
+            <Questions key={index} data={question} selected={isSelected} />
+          ))
+        ) : (
+          <Start handleStart={() => setShowQuestions(true)} />
+        )}
+      </section>
     </main>
   );
 }
