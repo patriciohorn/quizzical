@@ -1,20 +1,24 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 
-export default function Questions({ data }) {
-  // console.log(data);
-  const { question, correct_answer, incorrect_answers } = data;
-
-  const allAnswers = [correct_answer, ...incorrect_answers];
+export default function Questions({ question, answers, id, handleSelect }) {
+  const allAnswers = answers.map((text) => {
+    const answer = {
+      answer: text,
+      id: nanoid(),
+      selected: false
+    };
+    return answer;
+  });
 
   return (
     <div className="question--container">
       <h3>{question}</h3>
       <ul className="answer--container">
-        {allAnswers.map((answer, index) => (
-          <li key={index}>
-            <button styles={styles} className="answer" onClick={() => handleAnswerSelect(answer)}>
-              {answer}
+        {allAnswers.map((answer) => (
+          <li key={answer.id}>
+            <button id={answer.id} className="answer" onClick={() => handleSelect(answer.id, id)}>
+              {answer.answer}
             </button>
           </li>
         ))}

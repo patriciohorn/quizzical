@@ -5,7 +5,8 @@ import Questions from './components/Questions';
 
 export default function App() {
   const [showQuestions, setShowQuestions] = useState(false);
-  const [questionsData, setQuestionsData] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  // const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -13,7 +14,15 @@ export default function App() {
         `https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple`
       );
       const data = await res.json();
-      setQuestionsData(data.results);
+      const questionsData = data.results.map((item) => {
+        const { question, correct_answer, incorrect_answers } = item;
+        return {
+          id: nanoid(),
+          question: question,
+          answers: [correct_answer, ...incorrect_answers]
+        };
+      });
+      setQuestions(questionsData);
     }
 
     const timer = setTimeout(() => {
@@ -22,16 +31,23 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // function handleSelect(answerId, id) {
+  //   setQuestions(prevQuestions => (
+  //     prevQuestions.map(question => (
+  //       question.id ===  answerId ? {...question, selec}
+  //     ) )
+  //   ))
+  // }
+
+  const allQuestions = questions.map((question, index) => (
+    <Questions key={index} {...question} handleSelect={handleSelect} />
+  ));
+
   return (
     <main>
       <section className="container">
-        {showQuestions ? (
-          questionsData.map((question, index) => (
-            <Questions key={index} data={question} selected={isSelected} />
-          ))
-        ) : (
-          <Start handleStart={() => setShowQuestions(true)} />
-        )}
+        {showQuestions ? allQuestions : <Start handleStart={() => setShowQuestions(true)} />}
       </section>
     </main>
   );

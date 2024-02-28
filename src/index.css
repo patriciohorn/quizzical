@@ -112,6 +112,7 @@ li {
   flex-direction: column;
   text-align: center;
   gap: 1.5rem;
+  width: 500px;
 }
 
 .start h1 {
