@@ -14,14 +14,15 @@ export default function App() {
         `https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple`
       );
       const data = await res.json();
-      const questionsData = data.results.map((item) => {
-        const { question, correct_answer, incorrect_answers } = item;
-        return {
-          id: nanoid(),
-          question: question,
-          answers: [correct_answer, ...incorrect_answers]
-        };
-      });
+      const questionsData = data.results.map((question) => ({
+        id: nanoid(),
+        question: question.question,
+        correct_answer: question.correct_answer,
+        answers: [
+          { text: question.correct_answer, isSelected: false },
+          ...question.incorrect_answers.map((answer) => ({ text: answer, isSelected: false }))
+        ]
+      }));
       setQuestions(questionsData);
     }
 
@@ -32,22 +33,33 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // function handleSelect(answerId, id) {
-  //   setQuestions(prevQuestions => (
-  //     prevQuestions.map(question => (
-  //       question.id ===  answerId ? {...question, selec}
-  //     ) )
-  //   ))
+  // function generateAnswers(val, arr) {
+  //   const newAnswers = [...arr, val];
+  //   return newAnswers.map((val) => ({
+  //     answer: val,
+  //     id: nanoid(),
+  //     isSelected: false
+  //   }));
   // }
 
-  const allQuestions = questions.map((question, index) => (
-    <Questions key={index} {...question} handleSelect={handleSelect} />
-  ));
+  function handleSelect(answerId, id) {
+    // setQuestions(questions.map((q) => {
+    //   OfflineAudioCompletionEvent(q.id === )
+    // }))
+  }
+
+  // const allQuestions = questions.map((question, index) => (
+  //   <Quiz key={index} quiz={questions} handleSelect={handleSelect} />
+  // ));
 
   return (
     <main>
       <section className="container">
-        {showQuestions ? allQuestions : <Start handleStart={() => setShowQuestions(true)} />}
+        {showQuestions ? (
+          <Questions quiz={questions} onSelect={handleSelect} />
+        ) : (
+          <Start handleStart={() => setShowQuestions(true)} />
+        )}
       </section>
     </main>
   );
