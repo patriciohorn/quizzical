@@ -6,7 +6,7 @@ export default function Start({ handleStart }) {
         <p>Some description if needed</p>
       </div>
 
-      <button className="btn" onClick={handleStart}>
+      <button className="btn btn--lg" onClick={handleStart}>
         Start Quiz
       </button>
     </section>

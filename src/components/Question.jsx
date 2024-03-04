@@ -1,15 +1,23 @@
-export default function Question({ question, handleSelect }) {
-  console.log(question);
+import { decode } from 'html-entities';
+
+export default function Question(props) {
+  function selectAnswer(answer, currentQuestion) {
+    props.updateAnswer(answer, currentQuestion);
+  }
+  const answersElements = props.answers.map((answer, index) => {
+    return (
+      <button
+        key={index}
+        className={`answer ${answer === props.selectedAnswer ? 'selected' : ''}`}
+        onClick={() => selectAnswer(answer, props.question)}>
+        {decode(answer)}
+      </button>
+    );
+  });
   return (
     <div className="question--container">
-      <h3>{question.question}</h3>
-      <div className="answer--container">
-        {question.answers.map((answer, index) => (
-          <button key={index} className="answer">
-            {answer.text}
-          </button>
-        ))}
-      </div>
+      <h3>{decode(props.question)}</h3>
+      <div className="answer--container">{answersElements}</div>
     </div>
   );
 }
