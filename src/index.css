@@ -179,3 +179,10 @@ li {
   font-weight: 500;
   border-color: #d6dbf5;
 }
+
+.check--answers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}

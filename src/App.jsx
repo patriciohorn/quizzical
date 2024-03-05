@@ -6,6 +6,7 @@ import axios from 'axios'; // HTTP Library
 export default function App() {
   const [quizData, setQuizData] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -13,12 +14,19 @@ export default function App() {
           'https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple'
         );
         console.log(response.data);
-        const results = response.data.results.map((result) => ({
-          question: result.question,
-          correct_answer: result.correct_answer,
+        const concatenatedData = response.data.results.map((result) => ({
+          ...result,
           answers: [result.correct_answer, ...result.incorrect_answers]
         }));
-        setQuizData(results);
+
+        const transformedData = concatenatedData.map((question) => ({
+          ...question,
+          answers: question.answers.map((answer) => ({
+            text: answer,
+            isSelected: false
+          }))
+        }));
+        setQuizData(transformedData);
       } catch (error) {
         console.log(error);
       }
