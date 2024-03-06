@@ -14,18 +14,14 @@ export default function App() {
           'https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple'
         );
         console.log(response.data);
-        const concatenatedData = response.data.results.map((result) => ({
-          ...result,
-          answers: [result.correct_answer, ...result.incorrect_answers]
+        const transformedData = response.data.results.map((result) => ({
+          question: result.question,
+          correct_answer: result.correct_answer,
+          answers: [result.correct_answer, ...result.incorrect_answers].sort(
+            () => Math.random - 0.5
+          )
         }));
 
-        const transformedData = concatenatedData.map((question) => ({
-          ...question,
-          answers: question.answers.map((answer) => ({
-            text: answer,
-            isSelected: false
-          }))
-        }));
         setQuizData(transformedData);
       } catch (error) {
         console.log(error);
