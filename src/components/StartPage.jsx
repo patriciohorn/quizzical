@@ -1,10 +1,16 @@
-export default function Start({ handleIsPlaying }) {
+export default function Start({ handleStart }) {
+  const generateAPIUrl = () => {
+    let apiUrl = `https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple`;
+    return apiUrl;
+  };
   return (
     <div className="start">
-      <h1>Quizzical</h1>
-      <p>Test your sports knowledge!</p>
-      <button className="btn btn--lg" onClick={handleIsPlaying}>
-        Start Quiz
+      <div className="">
+        <h1>SporTrivia</h1>
+        <p>Test your sports knowledge!</p>
+      </div>
+      <button className="btn btn--lg" onClick={() => handleStart(generateAPIUrl())}>
+        Start quiz
       </button>
     </div>
   );
